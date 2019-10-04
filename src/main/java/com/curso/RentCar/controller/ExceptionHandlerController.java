@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.curso.RentCar.exception.CarLinkedUserException;
+import com.curso.RentCar.exception.CarNotAviableException;
 import com.curso.RentCar.exception.NotFoundException;
 
-@ControllerAdvice(basePackages = "prueba.apirest.controller")
+@ControllerAdvice(basePackages = "com.curso.RentCar.controller")
 public class ExceptionHandlerController {
 
 	@ResponseBody
@@ -17,4 +19,19 @@ public class ExceptionHandlerController {
 	public NotFoundException notFound(final NotFoundException e) {
 		return e;
 	}
+	
+	@ResponseBody
+	@ExceptionHandler(CarLinkedUserException.class)
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	public CarLinkedUserException carLinkedUser(final CarLinkedUserException e) {
+		return e;
+	}
+	
+	@ResponseBody
+	@ExceptionHandler(CarNotAviableException.class)
+	@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+	public CarNotAviableException carLinkedUser(final CarNotAviableException e) {
+		return e;
+	}
+	
 }

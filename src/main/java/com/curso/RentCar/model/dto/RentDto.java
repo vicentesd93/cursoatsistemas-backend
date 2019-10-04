@@ -22,6 +22,7 @@ public class RentDto {
 	private Integer id;
 	private LocalDate initD;
 	private LocalDate endD;
+	private Double price;
 	private CarEntity car;
 	private UserEntity user;
 }

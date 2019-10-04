@@ -1,5 +1,6 @@
 package com.curso.RentCar.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -11,9 +12,14 @@ public interface RentService {
 
 	/**
      * Metodo que devuelve todos los Rents
-     * @return Devuelve todos los Car de la aplicacion
+     * @return Devuelve todos los Rent de la aplicacion Page<>
      */
 	Page<RentEntity> findAll(Pageable pageable);
+	/**
+     * Metodo que devuelve todos los Rents
+     * @return Devuelve todos los Rent de la aplicacion Page<>
+     */
+	List<RentEntity> findAll();
 	/**
      * Metodo para guardar un Rent
      * @param Rent que va a ser guardado

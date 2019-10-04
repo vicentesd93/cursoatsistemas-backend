@@ -18,4 +18,5 @@ public class CarDto {
 	private String chassis_number;
 	private String brand;
 	private String model;
+	private Double price;
 }
