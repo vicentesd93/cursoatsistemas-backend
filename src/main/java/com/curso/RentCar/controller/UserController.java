@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.curso.RentCar.model.dto.UserDto;
+import com.curso.RentCar.model.entity.CarEntity;
 import com.curso.RentCar.model.entity.UserEntity;
+import com.curso.RentCar.service.CarService;
 import com.curso.RentCar.service.MapperUserDtoToUserEntity;
 import com.curso.RentCar.service.MapperUserEntityToUserDto;
 import com.curso.RentCar.service.UserService;
@@ -31,6 +33,8 @@ public class UserController {
 	@Autowired UserService userService;
 	@Autowired MapperUserEntityToUserDto userEntityToDto;
 	@Autowired MapperUserDtoToUserEntity userDtoToEntity;
+	
+	@Autowired CarService carService;
 	
 	@GetMapping
 	public Page<UserDto> get(@RequestParam(name = "page", required = false, defaultValue = "0") Integer page,
@@ -64,6 +68,10 @@ public class UserController {
 	@PutMapping("/{id}/car/{idCar}")
 	public void userLinkCar(@PathVariable("id") Integer id, @PathVariable("idCar") Integer idcar) throws NotFoundException {
 		UserEntity user = userService.findById(id).orElseThrow(() -> new NotFoundException());
-		/*TERMINAR*/
+		CarEntity car = carService.findById(idcar).orElseThrow(() -> new NotFoundException());
+		
+		user.getCars().add(car);
+
+		userService.save(user);
 	}
 }
