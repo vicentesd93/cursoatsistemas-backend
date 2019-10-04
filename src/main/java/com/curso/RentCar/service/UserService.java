@@ -5,30 +5,29 @@ import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.curso.RentCar.model.entity.UserEntity;
+import com.curso.RentCar.model.entity.RentEntity;
 
 public interface UserService {
 	/**
-     * Metodo que devuelve todos los Users
-     * @return Devuelve todos los User de la aplicacion
+     * Metodo que devuelve todos los Rents
+     * @return Devuelve todos los Rent de la aplicacion
      */
-	Page<UserEntity> findAll(Pageable pageable);
+	Page<RentEntity> findAll(Pageable pageable);
 	/**
-     * Metodo para guardar un User
-     * @param User que va a ser guardado
-     * @return Devuelve el User que va a ser guardado
-     * @throws BadRequestException 
+     * Metodo para guardar un Rent
+     * @param Rent que va a ser guardado
+     * @return Devuelve el Rent que va a ser guardado
      */
-	Optional<UserEntity> save(UserEntity u) ;
+	Optional<RentEntity> save(RentEntity u) ;
 	/**
-     * Metodo para Buscar un User
-     * @param id de User que va a ser buscado
-     * @return devuelve el User con el id indicado
+     * Metodo para Buscar un Rent
+     * @param id de Rent que va a ser buscado
+     * @return devuelve el Rent con el id indicado
      */
-	Optional<UserEntity> findById(Integer u);
+	Optional<RentEntity> findById(Integer u);
 	/**
-     * Metodo para eliminar un User
-     * @param User que vamos a eliminar
+     * Metodo para eliminar un Rent
+     * @param Rent que vamos a eliminar
      */
-	void delete(UserEntity u);
+	void delete(RentEntity u);
 }
