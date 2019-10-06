@@ -67,12 +67,12 @@ public class RentController {
 		//Comprobamos que el coche que queremos este disponible en las fechas indicadas
 		Optional<RentEntity> rentAviable = rentService.findAll()
 										.stream()
-										.filter(x -> !(x.getEndD().isBefore(rentdto.getEndD()) &&
-												x.getInitD().isAfter(rentdto.getInitD())) || 
-												!(x.getEndD().isBefore(rentdto.getInitD()) &&
-														x.getInitD().isAfter(rentdto.getEndD())) && 
-												x.getCar().equals(car) ? true : false).
-										findFirst();
+										.filter(x -> !(rentdto.getInitD().isAfter(x.getEndD()) &&
+												rentdto.getEndD().isAfter(x.getEndD())) && 
+												!(rentdto.getInitD().isBefore(x.getInitD()) &&
+														rentdto.getEndD().isBefore(x.getInitD())) && 
+												x.getCar().equals(car) ? true : false)
+										.findFirst();
 		
 		if(!rentAviable.isPresent()) {
 			rentdto.setId(null);
