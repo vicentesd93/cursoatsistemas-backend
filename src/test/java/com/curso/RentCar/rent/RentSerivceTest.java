@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.tomcat.jni.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.curso.RentCar.model.entity.CarEntity;
 import com.curso.RentCar.model.entity.RentEntity;
+import com.curso.RentCar.model.entity.UserEntity;
 import com.curso.RentCar.repository.RentRepository;
 import com.curso.RentCar.service.RentService;
 import com.curso.RentCar.service.RentServiceImpl;
@@ -78,19 +80,21 @@ public class RentSerivceTest {
 		// Given
 		LocalDate fini = LocalDate.parse("2019-10-01");
 		LocalDate ffin = LocalDate.parse("2019-10-05");
+		UserEntity user = new UserEntity();
+		user.setId(1);
 		CarEntity car = new CarEntity();
 		car.setId(1);
+		car.setUser(user);
+		List<RentEntity> list = new ArrayList<RentEntity>();
+		rent.setInitD(fini);
+		rent.setEndD(ffin);
+		rent.setCar(car);
+		rent.setUser(user);
+		list.add(rent);
 		//When
-		Mockito.when(rentRepository.findAll()
-				.stream()
-				.filter(x -> !(fini.isAfter(x.getEndD()) &&
-						ffin.isAfter(x.getEndD())) && 
-						!(fini.isBefore(x.getInitD()) &&
-								ffin.isBefore(x.getInitD())) && 
-						x.getCar().equals(car) ? true : false)
-				.findFirst()).thenReturn(Optional.empty());
+		Mockito.when(rentRepository.findAll()).thenReturn(list);
 		//Then
-		Optional<RentEntity> rent = rentRepository.findAll()
+		Optional<RentEntity> rentR = rentRepository.findAll()
 				.stream()
 				.filter(x -> !(fini.isAfter(x.getEndD()) &&
 						ffin.isAfter(x.getEndD())) && 
@@ -98,8 +102,11 @@ public class RentSerivceTest {
 								ffin.isBefore(x.getInitD())) && 
 						x.getCar().equals(car) ? true : false)
 				.findFirst();
-		Assert.assertNotNull(rent);
-		Assert.assertEquals(rent, Optional.empty());
+		Assert.assertNotNull(rentR);
+		Assert.assertEquals(rentR.get(), rent);
+	}
+	@Test
+	public void testCarNotAviable() {
 		
 	}
 }
