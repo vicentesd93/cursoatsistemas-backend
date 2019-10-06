@@ -1,5 +1,6 @@
 package com.curso.RentCar.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.curso.RentCar.exception.CarNotAviableException;
+import com.curso.RentCar.model.entity.CarEntity;
 import com.curso.RentCar.model.entity.RentEntity;
 import com.curso.RentCar.repository.RentRepository;
 
@@ -39,6 +42,23 @@ public class RentServiceImpl implements RentService{
 	@Override
 	public List<RentEntity> findAll() {
 		return rentRepository.findAll();
+	}
+
+	@Override
+	public boolean carAviable(LocalDate iniD, LocalDate endD, CarEntity car) {
+		Optional<RentEntity> rentAviable = rentRepository.findAll()
+				.stream()
+				.filter(x -> !(iniD.isAfter(x.getEndD()) &&
+						endD.isAfter(x.getEndD())) && 
+						!(iniD.isBefore(x.getInitD()) &&
+								endD.isBefore(x.getInitD())) && 
+						x.getCar().equals(car) ? true : false)
+				.findFirst();
+
+		if(!rentAviable.isPresent())
+			return true;
+		else
+			return false;
 	}
 
 }

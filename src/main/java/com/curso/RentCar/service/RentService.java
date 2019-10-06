@@ -1,11 +1,13 @@
 package com.curso.RentCar.service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import com.curso.RentCar.model.entity.CarEntity;
 import com.curso.RentCar.model.entity.RentEntity;
 
 public interface RentService {
@@ -37,4 +39,12 @@ public interface RentService {
      * @param Rent que vamos a eliminar
      */
 	void delete(RentEntity c);
+	/**
+	 * 
+	 * @param iniD fecha inicio 
+	 * @param endD fecha fin de la reserva 
+	 * @param car coche que se va a alquilar
+	 * @return true si esta disponible para las fechas
+	 */
+	boolean carAviable(LocalDate iniD,LocalDate endD, CarEntity car);
 }

@@ -64,17 +64,7 @@ public class RentController {
 		UserEntity user = userService.findById(iduser).orElseThrow(() -> new NotFoundException());
 		CarEntity car = carService.findById(idcar).orElseThrow(() -> new NotFoundException());
 		
-		//Comprobamos que el coche que queremos este disponible en las fechas indicadas
-		Optional<RentEntity> rentAviable = rentService.findAll()
-										.stream()
-										.filter(x -> !(rentdto.getInitD().isAfter(x.getEndD()) &&
-												rentdto.getEndD().isAfter(x.getEndD())) && 
-												!(rentdto.getInitD().isBefore(x.getInitD()) &&
-														rentdto.getEndD().isBefore(x.getInitD())) && 
-												x.getCar().equals(car) ? true : false)
-										.findFirst();
-		
-		if(!rentAviable.isPresent()) {
+		if(rentService.carAviable(rentdto.getInitD(), rentdto.getEndD(), car)) {
 			rentdto.setId(null);
 			rentdto.setCar(car);
 			rentdto.setUser(user);
