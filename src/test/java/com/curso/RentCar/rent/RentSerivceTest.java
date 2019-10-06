@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.tomcat.jni.User;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -80,6 +79,39 @@ public class RentSerivceTest {
 		// Given
 		LocalDate fini = LocalDate.parse("2019-10-01");
 		LocalDate ffin = LocalDate.parse("2019-10-05");
+		LocalDate fini2 = LocalDate.parse("2019-10-07");
+		LocalDate ffin2 = LocalDate.parse("2019-10-10");
+		UserEntity user = new UserEntity();
+		user.setId(1);
+		CarEntity car = new CarEntity();
+		car.setId(1);
+		car.setUser(user);
+		List<RentEntity> list = new ArrayList<RentEntity>();
+		rent.setInitD(fini);
+		rent.setEndD(ffin);
+		rent.setCar(car);
+		rent.setUser(user);
+		//When
+		Mockito.when(rentRepository.findAll()).thenReturn(list);
+		//Then
+		Optional<RentEntity> rentR = rentRepository.findAll()
+				.stream()
+				.filter(x -> !(fini2.isAfter(x.getEndD()) &&
+						ffin2.isAfter(x.getEndD())) && 
+						!(fini2.isBefore(x.getInitD()) &&
+								ffin2.isBefore(x.getInitD())) && 
+						x.getCar().equals(car) ? true : false)
+				.findFirst();
+		Assert.assertNotNull(rentR);
+		Assert.assertEquals(rentR, Optional.empty());
+	}
+	@Test
+	public void testCarNotAviable() {
+		// Given
+		LocalDate fini = LocalDate.parse("2019-10-01");
+		LocalDate ffin = LocalDate.parse("2019-10-05");
+		LocalDate fini2 = LocalDate.parse("2019-10-03");
+		LocalDate ffin2 = LocalDate.parse("2019-10-06");
 		UserEntity user = new UserEntity();
 		user.setId(1);
 		CarEntity car = new CarEntity();
@@ -96,17 +128,13 @@ public class RentSerivceTest {
 		//Then
 		Optional<RentEntity> rentR = rentRepository.findAll()
 				.stream()
-				.filter(x -> !(fini.isAfter(x.getEndD()) &&
-						ffin.isAfter(x.getEndD())) && 
-						!(fini.isBefore(x.getInitD()) &&
-								ffin.isBefore(x.getInitD())) && 
+				.filter(x -> !(fini2.isAfter(x.getEndD()) &&
+						ffin2.isAfter(x.getEndD())) && 
+						!(fini2.isBefore(x.getInitD()) &&
+								ffin2.isBefore(x.getInitD())) && 
 						x.getCar().equals(car) ? true : false)
 				.findFirst();
 		Assert.assertNotNull(rentR);
 		Assert.assertEquals(rentR.get(), rent);
-	}
-	@Test
-	public void testCarNotAviable() {
-		
 	}
 }

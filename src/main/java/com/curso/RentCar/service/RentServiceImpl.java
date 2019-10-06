@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.curso.RentCar.exception.CarNotAviableException;
 import com.curso.RentCar.model.entity.CarEntity;
 import com.curso.RentCar.model.entity.RentEntity;
 import com.curso.RentCar.repository.RentRepository;
