@@ -1,5 +1,5 @@
 .classpath
 .project
-tarjet/
+tarjet/*
 *.class
 *.jar
