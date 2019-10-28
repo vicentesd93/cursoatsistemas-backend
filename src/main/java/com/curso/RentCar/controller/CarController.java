@@ -1,5 +1,8 @@
 package com.curso.RentCar.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,13 +46,36 @@ public class CarController {
 			.map(x -> carEntitytoCarDto.map(x));
 	}
 	
+	@GetMapping("/list")
+	public List<CarDto> get(){
+		 
+		return  carService.findAll()
+				.stream()
+				.map(x -> carEntitytoCarDto.map(x))
+				.collect(Collectors.toList());
+	}
+	
 	@GetMapping("/{id}")
 	public CarDto getOne(@PathVariable("id") Integer id) throws NotFoundException {
 		carService.findById(id).orElseThrow(() -> new NotFoundException());
 		return carEntitytoCarDto.map(carService.findById(id).get());
 	}
 	
+	@PutMapping("/{id}")
+	@CrossOrigin(origins = "http://localhost:3000")
+	public CarDto update(@RequestBody @Valid CarDto cardto, @PathVariable("id") Integer id) throws NotFoundException {
+		CarEntity carUpdate = carService.findById(id).orElseThrow(() -> new NotFoundException());
+		
+		carUpdate.setBrand(cardto.getBrand());
+		carUpdate.setChassis_number(cardto.getChassis_number());
+		carUpdate.setModel(cardto.getModel());
+		carUpdate.setPrice(cardto.getPrice());
+		
+		return carEntitytoCarDto.map(carService.save(carUpdate).get());
+	}
+	
 	@PostMapping
+	@CrossOrigin(origins = "http://localhost:3000")
 	public CarDto create(@RequestBody @Valid CarDto cardto) {
 		final CarEntity entityMapped = carDtoToCarEntity.map(cardto);
 		final CarEntity entityStored = carService.save(entityMapped).get();
@@ -57,6 +85,7 @@ public class CarController {
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.OK)
+	@CrossOrigin(origins = "http://localhost:3000")
 	public void delete(@PathVariable("id") Integer id) throws NotFoundException{
 		carService.findById(id).orElseThrow(() -> new NotFoundException());
 		carService.delete(carService.findById(id).get());
